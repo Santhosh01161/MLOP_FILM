@@ -234,7 +234,7 @@ Visit `http://localhost:8000` to see the website.
 
 | Component | URL |
 |---|---|
-| Frontend (Amplify) | `https://frontend.xxxxxxxx.amplifyapp.com` |
+| Frontend (Amplify) | `https://frontend.dyuogleidh3h1.amplifyapp.com/` |
 | Backend (ECS Fargate) | `https://vf-22de0586fba54274b7d8b1daba37623d.ecs.us-east-1.on.aws` |
 
 ---
