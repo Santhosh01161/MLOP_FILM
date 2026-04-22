@@ -47,7 +47,7 @@ S3_BUCKET  = os.getenv("S3_BUCKET", "your-mlops-bucket")   # ← you will set th
 # ── Serve frontend ────────────────────────────────────────────────────────────
 @app.get("/")
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 # ── Upload video ──────────────────────────────────────────────────────────────
