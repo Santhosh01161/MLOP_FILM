@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <header>
   <div class="wrapper">
     <div class="header-inner">
@@ -34,12 +35,14 @@
 <main>
   <div class="wrapper">
 
+    <!-- Hero -->
     <div class="hero">
       <div class="hero-tag">AI · Video Enhancement · MLOps</div>
       <h1>Enhance Your<em>Surveillance Feed</em></h1>
       <p class="hero-sub">Upload low-frame-rate footage. Our FILM interpolation model doubles your frame rate — turning 5 FPS into 10 FPS, or 15 FPS into 30 FPS, with AI-reconstructed intermediate frames.</p>
     </div>
 
+    <!-- Stats -->
     <div class="stats-row">
       <div class="stat">
         <div class="stat-num">2×</div>
@@ -55,21 +58,14 @@
       </div>
     </div>
 
-    <div class="config-note">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px">
-        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-        <line x1="12" y1="9" x2="12" y2="13"/>
-        <line x1="12" y1="17" x2="12.01" y2="17"/>
-      </svg>
-      <div><strong>DEVELOPER SETUP REQUIRED</strong>Set <code>API_BASE_URL</code> in <code>static/app.js</code> to point to your FastAPI backend before deploying.</div>
-    </div>
-
-    <!-- ── Upload Panel ── -->
+    <!-- ══════════════════════════════════════════
+         PANEL 01 · UPLOAD
+    ══════════════════════════════════════════ -->
     <div class="panel" id="upload-panel">
       <div class="panel-title">01 · Upload Footage</div>
 
       <div class="drop-zone" id="drop-zone">
-        <input type="file" id="file-input" accept="video/*">
+        <input type="file" id="file-input" accept="video/mp4,video/avi,video/quicktime,video/x-matroska,video/*">
         <div class="drop-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -81,7 +77,8 @@
         <div class="drop-sub">or click to browse · MP4, AVI, MOV, MKV supported · max 2 GB</div>
       </div>
 
-      <div id="file-preview" style="display:none">
+      <!-- shown after a file is picked -->
+      <div id="file-preview">
         <div class="file-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <polygon points="23 7 16 12 23 17 23 7"/>
@@ -95,32 +92,38 @@
         <button class="file-remove" id="file-remove-btn">✕ REMOVE</button>
       </div>
 
-      <input type="hidden" id="interp-factor" value="2">
+      <!-- error message -->
+      <div class="error-banner" id="error-banner">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span id="error-text">Something went wrong.</span>
+      </div>
 
       <div class="settings-grid">
         <div class="field">
           <label>Interpolation Mode</label>
-          <div style="background:var(--bg);border:1px solid rgba(0,229,200,0.3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:13px;color:var(--text);">2× Frame Doubling</span>
-            <span style="font-size:10px;color:var(--accent);letter-spacing:2px;border:1px solid rgba(0,229,200,0.3);padding:3px 8px;">FIXED</span>
+          <div class="fixed-field">
+            <span>2× Frame Doubling</span>
+            <span class="fixed-tag">FIXED</span>
           </div>
         </div>
         <div class="field">
           <label>Output Quality</label>
-          <div style="background:var(--bg);border:1px solid rgba(0,229,200,0.3);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:13px;color:var(--text);">High</span>
-            <span style="font-size:10px;color:var(--accent);letter-spacing:2px;border:1px solid rgba(0,229,200,0.3);padding:3px 8px;">FIXED</span>
+          <div class="fixed-field">
+            <span>High</span>
+            <span class="fixed-tag">FIXED</span>
           </div>
         </div>
-        <input type="hidden" id="output-quality" value="high">
       </div>
 
-      <button class="submit-btn" id="submit-btn" disabled>
-        ▶ PROCESS VIDEO
-      </button>
+      <button class="submit-btn" id="submit-btn" disabled>▶ PROCESS VIDEO</button>
     </div>
 
-    <!-- ── Progress Panel ── -->
+    <!-- ══════════════════════════════════════════
+         PANEL 02 · PROGRESS
+    ══════════════════════════════════════════ -->
     <div class="panel" id="progress-panel">
       <div class="panel-title">02 · Processing</div>
 
@@ -129,7 +132,7 @@
         <span class="job-id-val" id="job-id-display">—</span>
       </div>
 
-      <div class="stage-list" id="stage-list">
+      <div class="stage-list">
         <div class="stage" id="stage-upload">
           <div class="stage-bullet"></div>
           <span class="stage-name">Video Upload to S3</span>
@@ -147,7 +150,7 @@
         </div>
         <div class="stage" id="stage-inference">
           <div class="stage-bullet"></div>
-          <span class="stage-name">FILM Model Inference (GPU EC2)</span>
+          <span class="stage-name">FILM Model Inference (GPU)</span>
           <span class="stage-status">PENDING</span>
         </div>
         <div class="stage" id="stage-export">
@@ -160,13 +163,21 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
+      <div class="progress-meta">
+        <span id="progress-message" class="progress-msg">Initialising...</span>
+        <span id="progress-pct" class="progress-pct-label">0%</span>
+      </div>
 
       <div class="log-box" id="log-box">
         <span class="log-line accent">[FILM-SECURE] Pipeline initialised</span>
       </div>
+
+      <button class="reset-btn" id="cancel-btn" style="margin-top:16px">✕ CANCEL JOB</button>
     </div>
 
-    <!-- ── Result Panel ── -->
+    <!-- ══════════════════════════════════════════
+         PANEL 03 · RESULT
+    ══════════════════════════════════════════ -->
     <div class="panel" id="result-panel">
       <div class="panel-title">03 · Enhanced Video Ready</div>
 
@@ -187,13 +198,13 @@
           <div class="result-card-unit">new frames added</div>
         </div>
         <div class="result-card">
-          <div class="result-card-label">PSNR Score</div>
-          <div class="result-card-val" id="psnr-score">—</div>
-          <div class="result-card-unit">dB (quality metric)</div>
+          <div class="result-card-label">Resolution</div>
+          <div class="result-card-val" id="resolution">—</div>
+          <div class="result-card-unit">output dimensions</div>
         </div>
       </div>
 
-      <a class="download-btn" id="download-btn" href="#" download>
+      <a class="download-btn" id="download-btn" href="#" target="_blank">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
@@ -205,11 +216,11 @@
       <button class="reset-btn" id="reset-btn">↩ PROCESS ANOTHER VIDEO</button>
     </div>
 
-  </div><!-- /wrapper -->
+  </div>
 </main>
 
 <footer>
-  <div class="wrapper" style="display:flex;justify-content:space-between;width:100%">
+  <div class="wrapper footer-inner">
     <span>FILM-SECURE © 2025 · AIT</span>
     <span>POWERED BY FILM + AWS SAGEMAKER + MLFLOW</span>
   </div>
