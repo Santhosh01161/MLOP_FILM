@@ -5,9 +5,9 @@
 //  API used:
 //    POST /api/upload
 //      body: FormData { file, interp_factor, quality }
-//      response: { job_id: "xxx" }
+//      response: { jobID: "xxx" }
 //
-//    GET /api/job/{job_id}
+//    GET /api/job/{jobID}
 //      response: {
 //        status:   "queued|preprocessing|processing|completed|failed"
 //        progress: 0-100,
@@ -154,21 +154,21 @@ submitBtn.addEventListener('click', async () => {
       throw new Error(errBody.detail || `Upload failed (HTTP ${uploadRes.status})`);
     }
 
-    const { job_id } = await uploadRes.json();
-    currentJobId = job_id;
+    const { jobID } = await uploadRes.json();
+    currentJobId = jobID;
 
     // Show job ID
-    jobIdEl.textContent = job_id;
+    jobIdEl.textContent = jobID;
     setStage('stage-upload', 'done', 'DONE');
     setProgress(20, 'Job registered. Waiting for worker...');
-    addLog(`Job registered: ${job_id}`, 'accent');
+    addLog(`Job registered: ${jobID}`, 'accent');
 
     // Move to queue stage
     setStage('stage-queue', 'active', 'WAITING');
     addLog('Job placed in SageMaker processing queue...');
 
     // Start polling
-    startPolling(job_id);
+    startPolling(jobID);
 
   } catch (err) {
     // Go back to upload panel and show error
@@ -181,7 +181,7 @@ submitBtn.addEventListener('click', async () => {
 });
 
 // ════════════════════════════════════════════════════════════════════
-//  POLLING — GET /api/job/{job_id} every 3 seconds
+//  POLLING — GET /api/job/{jobID} every 3 seconds
 // ════════════════════════════════════════════════════════════════════
 
 function startPolling(jobId) {
